@@ -1,21 +1,22 @@
-let gulp = require('gulp');
+const gulp = require('gulp');
 const { series } = gulp;
 
-let concat = require('gulp-concat');
-let minifyJS = require('gulp-uglify');
-let cleanCSS = require('gulp-clean-css');
-let deleteDirs = require('del');
-let autoprefixer = require('gulp-autoprefixer');
-let bump = require('gulp-bump');
-let yargs = require('yargs');
-let diff = require('gulp-diff');
+const concat = require('gulp-concat');
+const minifyJS = require('gulp-uglify');
+const htmlToJs = require('gulp-html-to-js')
+const cleanCSS = require('gulp-clean-css');
+const deleteDirs = require('del');
+const autoprefixer = require('gulp-autoprefixer');
+const bump = require('gulp-bump');
+const yargs = require('yargs');
+const diff = require('gulp-diff');
 
 
-let buildFolder = './build';
-let jsBuildFiles = [
+const buildFolder = './build';
+const jsBuildFiles = [
     './src/cookieterminal.js'
 ];
-let cssBuildFiles = [
+const cssBuildFiles = [
     './src/styles/main.css'
 ];
 
@@ -30,6 +31,12 @@ gulp.task('minify:js', function () {
         .pipe(concat('cookieterminal.min.js'))
         .pipe(gulp.dest(buildFolder));
 });
+
+gulp.task('html:compile', () => (
+    gulp.src('src/templates/**/*')
+        .pipe(htmlToJs({concat: 'html.js'}))
+        .pipe(gulp.dest(buildFolder))
+));
 
 gulp.task('minify:css', function () {
     return gulp.src(cssBuildFiles, { allowEmpty: true })
